@@ -25,8 +25,18 @@
         "backgroundColor": "#FFFFFF"
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "web": {
+        "config": {
+          "firebase": {
+            "apiKey": "AIzaSyBFVWQr2MkvvlPp02YZosvy8KwQtCpMz-s",
+            "authDomain": "desperta-a-dor.firebaseapp.com",
+            "projectId": "desperta-a-dor",
+            "storageBucket": "desperta-a-dor.appspot.com",
+            "messagingSenderId": "680051187057",
+            "appId": "1:680051187057:web:cdb948468d181d0a9baad0",
+            "measurementId": "G-Z4B63XYBTC"
+          }
+        }
+      }
   }
 }

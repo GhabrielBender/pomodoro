@@ -1,20 +1,18 @@
 import { View, Text, Image } from 'react-native';
-import React from 'react';
-import {
-  useFonts,
-  OpenSans_400Regular,
-  OpenSans_700Bold,
-} from '@expo-google-fonts/open-sans';
-import AppLoading from 'expo-app-loading';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-native';
+import ScrollPicker from 'react-native-wheely-good-picker';
 
 export default function styles() {
-  const [fontsLoaded] = useFonts({
-    OpenSans_400Regular,
-    OpenSans_700Bold,
-  });
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    setTimeout(() => {
+      navigate('pomodoro');
+    }, 5000);
+  }, [navigate]);
+
   return (
     <View
       style={{
@@ -34,7 +32,6 @@ export default function styles() {
       >
         <Text
           style={{
-            fontFamily: 'OpenSans_400Regular',
             fontSize: 36,
             marginRight: '30%',
             color: '#FFB5A7',
@@ -44,7 +41,6 @@ export default function styles() {
         </Text>
         <Text
           style={{
-            fontFamily: 'OpenSans_400Regular',
             fontSize: 48,
             color: '#FFB5A7',
           }}
@@ -53,7 +49,6 @@ export default function styles() {
         </Text>
         <Text
           style={{
-            fontFamily: 'OpenSans_400Regular',
             fontSize: 18,
             marginLeft: '5%',
             color: '#FFB5A7',

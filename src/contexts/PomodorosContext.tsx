@@ -9,6 +9,8 @@ interface PomodorosContextData {
   hasCompletedCycle: boolean;
   minutes: number;
   seconds: number;
+  modalOpen: boolean;
+  setModalOpen: (active: boolean) => void;
 }
 
 interface PomodorosProviderProps {
@@ -24,20 +26,13 @@ const ROUNDS_TIMES = {
 };
 
 export const PomodorosProvider = ({ children }: PomodorosProviderProps) => {
-  const {
-    isRunning,
-    hasFinished,
-    minutes,
-    seconds,
-    startTimer,
-    pauseTimer,
-    restartTimer,
-  } = useTimer({ initialTime: ROUNDS_TIMES.focus });
+  const { isRunning, hasFinished, minutes, seconds, startTimer, pauseTimer, restartTimer } =
+    useTimer({ initialTime: ROUNDS_TIMES.focus });
 
+  const [modalOpen, setModalOpen] = useState(false);
   const [quantity, setQuantity] = useState(0);
   const [completedRounds, setCompletedRounds] = useState(0);
-  const [currentType, setCurrentType] =
-    useState<keyof typeof ROUNDS_TIMES>('focus');
+  const [currentType, setCurrentType] = useState<keyof typeof ROUNDS_TIMES>('focus');
   const [hasCompletedCycle, setHasCompletedCycle] = useState(false);
 
   const selectQuantity = (selectedQuantity: number) => {
@@ -63,9 +58,7 @@ export const PomodorosProvider = ({ children }: PomodorosProviderProps) => {
       setHasCompletedCycle(true);
     } else {
       const shouldBeLongRest = completedRounds % 4 === 0;
-      const newTime = shouldBeLongRest
-        ? ROUNDS_TIMES.longRest
-        : ROUNDS_TIMES.rest;
+      const newTime = shouldBeLongRest ? ROUNDS_TIMES.longRest : ROUNDS_TIMES.rest;
 
       restartTimer(newTime);
       setCurrentType(shouldBeLongRest ? 'longRest' : 'rest');
@@ -81,6 +74,8 @@ export const PomodorosProvider = ({ children }: PomodorosProviderProps) => {
         hasCompletedCycle,
         minutes,
         seconds,
+        modalOpen,
+        setModalOpen,
       }}
     >
       {children}

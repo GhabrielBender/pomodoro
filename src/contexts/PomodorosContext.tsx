@@ -2,15 +2,21 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 import { useTimer } from '../hooks/useTimer';
 
+const ROUNDS_TIMES = {
+  focus: 25 * 60,
+  rest: 5 * 60,
+  longRest: 15 * 60,
+};
+
 interface PomodorosContextData {
-  selectQuantity: (selectedQuantity: number) => void;
+  isRunning: boolean;
   pauseTimer: () => void;
   startTimer: () => void;
-  hasCompletedCycle: boolean;
   minutes: number;
   seconds: number;
-  modalOpen: boolean;
-  setModalOpen: (active: boolean) => void;
+  currentType: keyof typeof ROUNDS_TIMES;
+  showModal: boolean;
+  closeModal: () => void;
 }
 
 interface PomodorosProviderProps {
@@ -19,25 +25,38 @@ interface PomodorosProviderProps {
 
 export const PomodorosContext = createContext({} as PomodorosContextData);
 
-const ROUNDS_TIMES = {
-  focus: 25 * 60,
-  rest: 5 * 60,
-  longRest: 15 * 60,
-};
-
 export const PomodorosProvider = ({ children }: PomodorosProviderProps) => {
-  const { isRunning, hasFinished, minutes, seconds, startTimer, pauseTimer, restartTimer } =
-    useTimer({ initialTime: ROUNDS_TIMES.focus });
+  const {
+    isRunning,
+    hasFinished,
+    minutes,
+    seconds,
+    startTimer,
+    pauseTimer,
+    restartTimer,
+  } = useTimer({ initialTime: ROUNDS_TIMES.focus });
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const [completedRounds, setCompletedRounds] = useState(0);
-  const [currentType, setCurrentType] = useState<keyof typeof ROUNDS_TIMES>('focus');
-  const [hasCompletedCycle, setHasCompletedCycle] = useState(false);
+  const [currentType, setCurrentType] =
+    useState<keyof typeof ROUNDS_TIMES>('focus');
 
-  const selectQuantity = (selectedQuantity: number) => {
-    setQuantity(selectedQuantity);
-    startTimer();
+  const closeModal = () => {
+    if (currentType === 'rest' || currentType === 'longRest') {
+      restartTimer(ROUNDS_TIMES.focus);
+      setCurrentType('focus');
+      return setShowModal(false);
+    }
+
+    const shouldBeLongRest = completedRounds % 4 === 0;
+    const newTime = shouldBeLongRest
+      ? ROUNDS_TIMES.longRest
+      : ROUNDS_TIMES.rest;
+
+    restartTimer(newTime);
+    setCurrentType(shouldBeLongRest ? 'longRest' : 'rest');
+
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -47,35 +66,20 @@ export const PomodorosProvider = ({ children }: PomodorosProviderProps) => {
       setCompletedRounds((count) => count + 1);
     }
 
-    if (currentType === 'rest' || currentType === 'longRest') {
-      restartTimer(ROUNDS_TIMES.focus);
-      setCurrentType('focus');
-    }
+    setShowModal(true);
   }, [hasFinished]);
-
-  useEffect(() => {
-    if (completedRounds >= quantity) {
-      setHasCompletedCycle(true);
-    } else {
-      const shouldBeLongRest = completedRounds % 4 === 0;
-      const newTime = shouldBeLongRest ? ROUNDS_TIMES.longRest : ROUNDS_TIMES.rest;
-
-      restartTimer(newTime);
-      setCurrentType(shouldBeLongRest ? 'longRest' : 'rest');
-    }
-  }, [completedRounds]);
 
   return (
     <PomodorosContext.Provider
       value={{
-        selectQuantity,
+        isRunning,
         pauseTimer,
         startTimer,
-        hasCompletedCycle,
         minutes,
         seconds,
-        modalOpen,
-        setModalOpen,
+        currentType,
+        showModal,
+        closeModal,
       }}
     >
       {children}

@@ -31,21 +31,23 @@ export const useTimer = ({ initialTime }: TimerProps): TimerReturn => {
 
   const pauseTimer = () => {
     setIsRunning(false);
+    clearTimeout(timer);
   };
 
   const finishTimer = () => {
-    setHasFinished(true);
     setIsRunning(false);
+    setHasFinished(true);
   };
 
   const restartTimer = (newTime: number) => {
     clearTimeout(timer);
     setIsRunning(false);
+    setHasFinished(false);
     setTime(newTime);
 
     setTimeout(() => {
       startTimer();
-    }, 5000);
+    }, 500);
   };
 
   useEffect(() => {

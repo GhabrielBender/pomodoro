@@ -1,15 +1,13 @@
 import { View, Text, Image } from 'react-native';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-native';
-import ScrollPicker from 'react-native-wheely-good-picker';
 
-export default function styles() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+export function Home() {
   const navigate = useNavigate();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+
   useEffect(() => {
     setTimeout(() => {
-      navigate('pomodoro');
+      navigate('/pomodoro');
     }, 5000);
   }, [navigate]);
 

@@ -1,12 +1,9 @@
+import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeRouter, Route, Routes } from 'react-router-native';
 
-import React from 'react';
-import Home from './src/Home';
 import { PomodorosProvider } from './src/contexts/PomodorosContext';
-import Stop from './src/Stop';
-import Focus from './src/Focus';
-import NumberPomodoros from './src/NumberPomodoros';
+import { Pomodoro, Home } from './src/screens';
 
 export default function App() {
   return (
@@ -14,9 +11,7 @@ export default function App() {
       <NativeRouter>
         <SafeAreaView>
           <Routes>
-            <Route path="/stop" element={<Stop />} />
-            <Route path="/focus" element={<Focus />} />
-            <Route path="/pomodoro" element={<NumberPomodoros />} />
+            <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </SafeAreaView>
